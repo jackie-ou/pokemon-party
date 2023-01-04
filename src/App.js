@@ -1,23 +1,26 @@
-import logo from './logo.svg';
+import pokeball from './Pokeball.png';
+import Pokemon from './Pokemon.js';
+import Load from './Load.js';
 import './App.css';
+import './Pokemon.js';
 
 function App() {
   return (
     <div className="container">
       <section className="red-container">
         <ul id="party">
-          <li className="pokemon-list">+</li>
-          <li className="pokemon-list">+</li>
-          <li className="pokemon-list">+</li>
-          <li className="pokemon-list">+</li>
-          <li className="pokemon-list">+</li>
-          <li className="pokemon-list">+</li>
-          <li className="pokemon-list">+</li>
+          <Pokemon></Pokemon>
+          <Pokemon></Pokemon>
+          <Pokemon></Pokemon>
+          <Pokemon></Pokemon>
+          <Pokemon></Pokemon>
+          <Pokemon></Pokemon>
         </ul>
       </section>
       <section className="blue-container">
-        <p>Image goes here</p>
+        <img src={pokeball}></img>
       </section>
+      <Load></Load>
     </div>
   );
 }
