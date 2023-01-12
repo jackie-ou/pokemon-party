@@ -23,7 +23,7 @@
   min-height: 100vh;
 }
 
-li{
+.pokemon-list{
   border: 5px dashed #FF6962;
   width: 365px;
   height: 78px;

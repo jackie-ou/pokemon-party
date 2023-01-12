@@ -1,47 +1,33 @@
-import pokeball from './Pokeball.png';
-import Pokemon from './Pokemon.js';
-import { loadPokemonData } from './Load.js';
-import './App.css';
-import './Pokemon.js';
-import {useEffect, useState} from 'react';
+import pokeball from "./Pokeball.png";
+import Pokemon from "./Pokemon.js";
+import loadPokemonData from "./Load.js";
+import "./App.css";
+import "./Pokemon.js";
+import { useEffect, useState } from "react";
 
 function App() {
   const [pokemonAPIResponse, setPokemonAPIResponse] = useState(undefined);
-  const [userSearch, setUserSearch] = useState('');
-  
-  useEffect(() =>{
-    loadPokemonData().then(response => setPokemonAPIResponse(response));
-    // console.log(pokemonAPIResponse);
+  const [query, setQuery] = useState("");
+
+  useEffect(()=>{
+    loadPokemonData().then((response) => {
+      console.log(response);
+      setPokemonAPIResponse(response);
+    })
   }, []);
 
-  useEffect(() =>{
-    const form = document.getElementById('userInput').value;
-    setUserSearch(form);
-    console.log(`User input: ${form}`);
-  }, []);
 
-  function getUserInput(){
-    // const userSearch = document.getElementById('userInput').value;
-    // console.log(`User input: ${userSearch}`);
-    // setUserSearch(userSearch);
-  }
 
   let pokedex = [];
-  let searchResults = [];
 
   // For each pokemon, store name in array
-  if(pokemonAPIResponse) {
-    pokedex = pokemonAPIResponse.map(data => data.name);
+  if (pokemonAPIResponse) {
+    pokedex = pokemonAPIResponse.map((data) => data.name);
     console.log(`Pokedex: ${pokedex}`);
-    searchResults = pokedex.filter(pokemon => pokemon.includes(userSearch));
-    console.log(`Search results: ${searchResults}`);
   }
 
   return (
     <>
-      <form>
-        <input type='text' id='userInput'></input>
-      </form>
       <div className="container">
         <section className="red-container">
           <ul id="party">
@@ -54,6 +40,20 @@ function App() {
           </ul>
         </section>
         <section className="blue-container">
+          <input
+            type="text"
+            placeholder="Search..."
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <ul className="search-results">
+            {pokedex.filter((pokemon) =>
+              pokemon.includes(query)).map((name, id) => (
+                <li key={id} className="search-results-item">
+                  {name}
+                </li>
+              ))
+            }
+          </ul>
           <img src={pokeball}></img>
         </section>
       </div>
