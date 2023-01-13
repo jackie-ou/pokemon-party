@@ -36,11 +36,11 @@ function App() {
         <section className="blue-container">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search"
             onChange={(e) => setQuery(e.target.value.toLowerCase())}
             className="search"
           />
-          <div className="idk">
+          <div className="display-container">
             <ul className="search-results">
               {allPokemons
                 .filter((pokemon) => pokemon.includes(query))
@@ -56,7 +56,7 @@ function App() {
             </ul>
             <div className="model-container">
               <img className="model" src={filler3d}></img>
-              <p className="model-name">Chansey</p>
+              <p className="model-name">Chansey <span className="model-id">#113</span></p>
             </div>
           </div>
         </section>
