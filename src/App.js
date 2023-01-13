@@ -1,6 +1,6 @@
 import pokeball from "./Pokeball.png";
-import filler from "./filler.png"
-import filler3d from "./filler3d.png"
+import filler from "./filler.png";
+import filler3d from "./filler3d.png";
 import Pokemon from "./Pokemon.js";
 import loadPokemonData from "./Load.js";
 import "./App.css";
@@ -10,7 +10,8 @@ import { useEffect, useState } from "react";
 function App() {
   const [pokemonAPIResponse, setPokemonAPIResponse] = useState(undefined); // [0: {name:..., url...}]
   const [allPokemons, setAllPokemons] = useState([]); // ['bulbasaur', 'ivysaur', 'venusaur']
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(""); // string
+  const [displayCount, setDisplayCount] = useState(18); // number
 
   useEffect(() => {
     loadPokemonData().then((response) => {
@@ -36,7 +37,7 @@ function App() {
           <input
             type="text"
             placeholder="Search..."
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => setQuery(e.target.value.toLowerCase())}
             className="search"
           />
           <div className="idk">
@@ -45,10 +46,13 @@ function App() {
                 .filter((pokemon) => pokemon.includes(query))
                 .map((name, id) => (
                   <li key={id} className="search-results-item">
-                    <img className="icon" src={filler}></img> 
-                    <span className="pokemon-result">{name}</span>
+                    <img className="icon" src={filler}></img>
+                    <span className="pokemon-result">
+                      {name.charAt(0).toUpperCase() + name.slice(1)}
+                    </span>
                   </li>
-                ))}
+                ))
+                .slice(0, displayCount)}
             </ul>
             <div className="model-container">
               <img className="model" src={filler3d}></img>
