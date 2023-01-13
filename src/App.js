@@ -1,4 +1,6 @@
 import pokeball from "./Pokeball.png";
+import filler from "./filler.png"
+import filler3d from "./filler3d.png"
 import Pokemon from "./Pokemon.js";
 import loadPokemonData from "./Load.js";
 import "./App.css";
@@ -6,25 +8,16 @@ import "./Pokemon.js";
 import { useEffect, useState } from "react";
 
 function App() {
-  const [pokemonAPIResponse, setPokemonAPIResponse] = useState(undefined);
+  const [pokemonAPIResponse, setPokemonAPIResponse] = useState(undefined); // [0: {name:..., url...}]
+  const [allPokemons, setAllPokemons] = useState([]); // ['bulbasaur', 'ivysaur', 'venusaur']
   const [query, setQuery] = useState("");
 
-  useEffect(()=>{
+  useEffect(() => {
     loadPokemonData().then((response) => {
-      console.log(response);
       setPokemonAPIResponse(response);
-    })
+      setAllPokemons(response.map((data) => data.name));
+    });
   }, []);
-
-
-
-  let pokedex = [];
-
-  // For each pokemon, store name in array
-  if (pokemonAPIResponse) {
-    pokedex = pokemonAPIResponse.map((data) => data.name);
-    console.log(`Pokedex: ${pokedex}`);
-  }
 
   return (
     <>
@@ -44,17 +37,24 @@ function App() {
             type="text"
             placeholder="Search..."
             onChange={(e) => setQuery(e.target.value)}
+            className="search"
           />
-          <ul className="search-results">
-            {pokedex.filter((pokemon) =>
-              pokemon.includes(query)).map((name, id) => (
-                <li key={id} className="search-results-item">
-                  {name}
-                </li>
-              ))
-            }
-          </ul>
-          <img src={pokeball}></img>
+          <div className="idk">
+            <ul className="search-results">
+              {allPokemons
+                .filter((pokemon) => pokemon.includes(query))
+                .map((name, id) => (
+                  <li key={id} className="search-results-item">
+                    <img className="icon" src={filler}></img> 
+                    <span className="pokemon-result">{name}</span>
+                  </li>
+                ))}
+            </ul>
+            <div className="model-container">
+              <img className="model" src={filler3d}></img>
+              <p className="model-name">Chansey</p>
+            </div>
+          </div>
         </section>
       </div>
     </>
