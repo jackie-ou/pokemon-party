@@ -14,8 +14,9 @@ function App() {
   const [allPokemons, setAllPokemons] = useState([]); // ['bulbasaur', 'ivysaur', 'venusaur']
   const [allURLs, setAllURLs] = useState([]); // ['url', 'url', 'url']
   const [query, setQuery] = useState(""); // string
-  const [displayCount, setDisplayCount] = useState(18); // number
+  const [displayCount, setDisplayCount] = useState(15); // number
   const [sprites, setSprites] = useState({}); // ['url', 'url', 'url']
+  const [splash, setSplashes] = useState({}); // ['url', 'url', 'url']
 
   useEffect(() => {
     loadPokemonData().then((response) => {
@@ -24,9 +25,15 @@ function App() {
       setAllURLs(response.map((data) => data.url));
     });
     loadSprites().then((response) => {
-      setSprites(response);
+      const [responseSprite, responseSplash] = response;
+      setSprites(responseSprite);
+      setSplashes(responseSplash);
     })
   }, []);
+
+  function foo(){
+    console.log('click')
+  }
 
   return (
     <>
@@ -53,7 +60,7 @@ function App() {
               {allPokemons
                 .filter((pokemon) => pokemon.includes(query))
                 .map((name, id) => (
-                  <li key={id} className="search-results-item">
+                  <li key={id} className="search-results-item" onClick={foo}>
                     {sprites[name] != null ? <img className="icon" src={sprites[name]}></img> : <img className="icon" src={loading}></img>}
                     <span className="pokemon-result">
                       {name.charAt(0).toUpperCase() + name.slice(1)}
@@ -63,7 +70,7 @@ function App() {
                 .slice(0, displayCount)}
             </ul>
             <div className="model-container">
-              <img className="model" src={filler3d}></img>
+              {sprites['buneary'] != null ? <img className="model" src={splash.buneary}></img> : <img className="icon" src={loading}></img>}
               <p className="model-name">
                 Chansey <span className="model-id">#113</span>
               </p>
