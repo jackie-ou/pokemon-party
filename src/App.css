@@ -41,8 +41,7 @@
 }
 
 .search {
-  margin-top: 40px;
-  margin-left: 40px;
+  margin: 40px;
   width: 15rem;
   font-family: "Flexo", arial, sans-serif;
   padding: 13px 10px 10px 10px;
@@ -65,7 +64,6 @@
   width: 16rem;
   height: 80vh;
   padding-right: 40px;
-  border-right: 1px solid rgba(0, 0, 0, 0.195);
 }
 
 .search-results-item:first-child {
@@ -126,12 +124,17 @@
   color: #616161;
 }
 
+.menu{
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(0, 0, 0, 0.195);
+}
+
 .blue-container {
   background-color: #DAF0F7;
   min-height: 100vh;
   display: flex;
   flex: 1 1 40vh;
-  flex-direction: column;
   justify-content: center;
 }
 
@@ -139,3 +142,5 @@
   display: flex;
   margin: 1rem;
 }
+
+html, body {margin: 0; height: 100%; overflow: hidden}
