@@ -1,97 +1,96 @@
 import pokeball from "./Pokeball.png";
 import loading from "./Loading.png";
-import filler3d from "./filler3d.png";
-import Pokemon from "./Pokemon.js";
-import loadPokemonData from "./Load.js";
-import getSprite from "./GetSprite";
 import "./App.css";
 import "./Pokemon.js";
 import { useEffect, useState } from "react";
-import loadSprites from "./LoadSprite.js";
+
+import Pokedex from "pokedex-promise-v2";
+const P = new Pokedex();
 
 function App() {
-  const [pokemonAPIResponse, setPokemonAPIResponse] = useState([]); // [0: {name:..., url...}]
-  const [allPokemons, setAllPokemons] = useState([]); // ['bulbasaur', 'ivysaur', 'venusaur']
-  const [allURLs, setAllURLs] = useState([]); // ['url', 'url', 'url']
-  const [query, setQuery] = useState(""); // string
-  const [displayCount, setDisplayCount] = useState(10); // number
-  const [sprites, setSprites] = useState({}); // ['url', 'url', 'url']
-  const [splash, setSplashes] = useState({}); // ['url', 'url', 'url']
-  const [displayName, setDisplayName] = useState("bulbasaur"); // 'bulbasaur'
+  const [query, setQuery] = useState("");
+  const [resources, setResources] = useState([]);
+  const [displayName, setDisplayName] = useState(null);
 
   useEffect(() => {
-    loadPokemonData().then((response) => {
-      setPokemonAPIResponse(response);
-      setAllPokemons(response.map((data) => data.name));
-      setAllURLs(response.map((data) => data.url));
-    });
-    loadSprites().then((response) => {
-      const [responseSprite, responseSplash] = response;
-      setSprites(responseSprite);
-      setSplashes(responseSplash);
-    });
+    const pokemonResources = [];
+    for (let i = 1; i <= 1010; i++) {
+      if(i === 1009 || i === 1010) continue;
+      P.getResource(`/api/v2/pokemon/${i}`).then((response) => {
+        pokemonResources.push(response); // the getResource function accepts singles or arrays of URLs/paths
+      });
+    }
+    setResources(pokemonResources);
+    setDisplayName("bulbasaur");
   }, []);
 
+  const getSplash = function (displayName) {
+    const pokemon = resources.filter(
+      (response) => response.name === displayName
+    );
+    return pokemon[0].sprites.other.home.front_default;
+  };
+
+  const getId = function (displayName) {
+    const pokemon = resources.filter(
+      (response) => response.name === displayName
+    );
+    return pokemon[0] ? pokemon[0].id : 1;
+  };
+
   return (
-    <>
-      <div className="container">
-        {/* <section className="red-container">
-          <ul id="party">
-            <Pokemon></Pokemon>
-            <Pokemon></Pokemon>
-            <Pokemon></Pokemon>
-            <Pokemon></Pokemon>
-            <Pokemon></Pokemon>
-            <Pokemon></Pokemon>
+    <div className="container">
+      <div className="blue-container">
+        <div className="menu">
+          <input
+            type="text"
+            placeholder="Start searching..."
+            className="search"
+            onChange={(e) => setQuery(e.target.value.toLowerCase())}
+          />
+          <ul className="search-results">
+            {resources
+              .filter((pokemon) => pokemon.name.toLowerCase().includes(query))
+              .map((pokemon) => (
+                <li
+                  key={pokemon.name}
+                  className="search-results-item"
+                  onClick={() => {
+                    setDisplayName(pokemon.name);
+                  }}
+                >
+                  {(resources.length < 10 || pokemon.sprites.front_default != null) ? (
+                    <img
+                      className="icon"
+                      src={pokemon.sprites.front_default}
+                    ></img>
+                  ) : (
+                    <img className="icon" src={loading}></img>
+                  )}
+                  <span className="pokemon-result">
+                    {pokemon.name.charAt(0).toUpperCase() +
+                      pokemon.name.slice(1)}
+                  </span>
+                </li>
+              ))
+              .slice(0, 10)}
           </ul>
-        </section> */}
-        <section className="blue-container">
-          <div className="menu">
-            <input
-              type="text"
-              placeholder="Search"
-              onChange={(e) => setQuery(e.target.value.toLowerCase())}
-              className="search"
-            />
-            <ul className="search-results">
-              {allPokemons
-                .filter((pokemon) => pokemon.includes(query))
-                .map((name, id) => (
-                  <li
-                    key={id}
-                    className="search-results-item"
-                    onClick={() => {
-                      setDisplayName(name);
-                    }}
-                  >
-                    {sprites[name] != null ? (
-                      <img className="icon" src={sprites[name]}></img>
-                    ) : (
-                      <img className="icon" src={loading}></img>
-                    )}
-                    <span className="pokemon-result">
-                      {name.charAt(0).toUpperCase() + name.slice(1)}
-                    </span>
-                  </li>
-                ))
-                .slice(0, displayCount)}
-            </ul>
-          </div>
-          <div className="model-container">
-            {sprites[displayName] != null ? (
-              <img className="model" src={splash[displayName]}></img>
-            ) : (
-              <img className="icon" src={loading}></img>
-            )}
-            <p className="model-name">
-              {displayName &&
-                displayName.charAt(0).toUpperCase() + displayName.slice(1)}
-              <span className="model-id">#113</span>
-            </p>
-          </div>
-        </section>
+        </div>
+        <div className="model-container">
+          {resources.length ? (
+            <img className="model" src={getSplash(displayName)}></img>
+          ) : (
+            <img src={pokeball}></img>
+          )}
+          <p className="model-name">
+            {resources.length ? displayName.charAt(0).toUpperCase() + displayName.slice(1) : ''}
+            <span className="model-id">
+              {resources.length ? `#${getId(displayName)}`: ''}
+            </span>
+          </p>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 
