@@ -11,11 +11,12 @@ function App() {
   const [query, setQuery] = useState("");
   const [resources, setResources] = useState([]);
   const [displayName, setDisplayName] = useState(null);
+  const [flavorText, setFlavorText] = useState("");
 
   useEffect(() => {
     const pokemonResources = [];
     for (let i = 1; i <= 1010; i++) {
-      if(i === 1009 || i === 1010) continue;
+      if (i === 1009 || i === 1010) continue;
       P.getResource(`/api/v2/pokemon/${i}`).then((response) => {
         pokemonResources.push(response); // the getResource function accepts singles or arrays of URLs/paths
       });
@@ -38,6 +39,19 @@ function App() {
     return pokemon[0] ? pokemon[0].id : 1;
   };
 
+  const getFlavorText = function (displayName) {
+    P.getPokemonSpeciesByName(displayName).then((response) => {
+      if (response.flavor_text_entries.length === 0) {
+        setFlavorText("No entries found");
+      }
+      const raw = response.flavor_text_entries.filter(
+        (index) => index.language.name === "en"
+      )[0].flavor_text;
+      const flavorText = raw.replace("", " ");
+      setFlavorText(flavorText);
+    });
+  };
+
   return (
     <div className="container">
       <div className="blue-container">
@@ -57,9 +71,11 @@ function App() {
                   className="search-results-item"
                   onClick={() => {
                     setDisplayName(pokemon.name);
+                    getFlavorText(pokemon.name);
                   }}
                 >
-                  {(resources.length < 10 || pokemon.sprites.front_default != null) ? (
+                  {resources.length < 10 ||
+                  pokemon.sprites.front_default != null ? ( //
                     <img
                       className="icon"
                       src={pokemon.sprites.front_default}
@@ -83,11 +99,14 @@ function App() {
             <img src={pokeball}></img>
           )}
           <p className="model-name">
-            {resources.length ? displayName.charAt(0).toUpperCase() + displayName.slice(1) : ''}
+            {resources.length
+              ? displayName.charAt(0).toUpperCase() + displayName.slice(1)
+              : ""}
             <span className="model-id">
-              {resources.length ? `#${getId(displayName)}`: ''}
+              {resources.length ? `#${getId(displayName)}` : ""}
             </span>
           </p>
+          <p className="model-flavor-text">{flavorText}</p>
         </div>
       </div>
     </div>

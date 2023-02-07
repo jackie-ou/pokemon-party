@@ -124,6 +124,12 @@
   color: #616161;
 }
 
+.model-flavor-text{
+  font-family: "Flexo", arial, sans-serif;
+  color: #212121;
+  font-size: 1.1rem;
+}
+
 .menu{
   display: flex;
   flex-direction: column;
