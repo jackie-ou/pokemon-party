@@ -10,7 +10,8 @@ const P = new Pokedex();
 function App() {
   const [query, setQuery] = useState("");
   const [resources, setResources] = useState([]);
-  const [displayName, setDisplayName] = useState(null);
+  const [displayName, setDisplayName] = useState("bulbasaur");
+  const [ApiLookupName, setApiLookupName] = useState("bulbasaur");
   const [flavorText, setFlavorText] = useState("");
 
   useEffect(() => {
@@ -22,12 +23,11 @@ function App() {
       });
     }
     setResources(pokemonResources);
-    setDisplayName("bulbasaur");
   }, []);
 
-  const getSplash = function (displayName) {
+  const getSplash = function (ApiLookupName) {
     const pokemon = resources.filter(
-      (response) => response.name === displayName
+      (response) => response.name === ApiLookupName
     );
     return pokemon[0].sprites.other.home.front_default;
   };
@@ -65,14 +65,15 @@ function App() {
           />
           <ul className="search-results">
             {resources
-              .filter((pokemon) => pokemon.name.toLowerCase().includes(query))
+              .filter((pokemon) => pokemon.species.name.toLowerCase().includes(query))
               .map((pokemon) => (
                 <li
                   key={pokemon.name}
                   className="search-results-item"
                   onClick={() => {
-                    setDisplayName(pokemon.name);
-                    getFlavorText(pokemon.name);
+                    setDisplayName(pokemon.species.name);
+                    setApiLookupName(pokemon.name);
+                    getFlavorText(pokemon.species.name);
                   }}
                 >
                   {resources.length < 10 ||
@@ -85,8 +86,8 @@ function App() {
                     <img className="icon" src={loading}></img>
                   )}
                   <span className="pokemon-result">
-                    {pokemon.name.charAt(0).toUpperCase() +
-                      pokemon.name.slice(1)}
+                    {pokemon.species.name.charAt(0).toUpperCase() +
+                      pokemon.species.name.slice(1)}
                   </span>
                 </li>
               ))
@@ -95,7 +96,7 @@ function App() {
         </div>
         <div className="model-container">
           {resources.length ? (
-            <img className="model" src={getSplash(displayName)}></img>
+            <img className="model" src={getSplash(ApiLookupName)}></img>
           ) : (
             <img src={pokeball}></img>
           )}
