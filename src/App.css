@@ -101,7 +101,6 @@
   width: 50rem;
   height: 50rem;
   /* margin-left: 22rem; */
-
 }
 
 .model-container {
@@ -128,6 +127,8 @@
   font-family: "Flexo", arial, sans-serif;
   color: #212121;
   font-size: 1.1rem;
+  text-align: center;
+  /* width: 40rem; */
 }
 
 .menu{

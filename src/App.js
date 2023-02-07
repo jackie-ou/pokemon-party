@@ -42,11 +42,12 @@ function App() {
   const getFlavorText = function (displayName) {
     P.getPokemonSpeciesByName(displayName).then((response) => {
       if (response.flavor_text_entries.length === 0) {
-        setFlavorText("No entries found");
+        setFlavorText("No entries found.");
       }
-      const raw = response.flavor_text_entries.filter(
+      const englishFlavorTexts = response.flavor_text_entries.filter(
         (index) => index.language.name === "en"
-      )[0].flavor_text;
+      );
+      const raw = englishFlavorTexts[englishFlavorTexts.length-1].flavor_text;
       const flavorText = raw.replace("", " ");
       setFlavorText(flavorText);
     });
