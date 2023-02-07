@@ -1,5 +1,6 @@
 import pokeball from "./Pokeball.png";
 import loading from "./Loading.png";
+import mystery from "./mystery.png";
 import "./App.css";
 import "./Pokemon.js";
 import { useEffect, useState } from "react";
@@ -29,7 +30,7 @@ function App() {
     const pokemon = resources.filter(
       (response) => response.name === ApiLookupName
     );
-    return pokemon[0].sprites.other.home.front_default;
+    return pokemon[0].sprites.other.home.front_default != null ? pokemon[0].sprites.other.home.front_default : mystery;
   };
 
   const getId = function (displayName) {
